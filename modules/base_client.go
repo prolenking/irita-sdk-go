@@ -110,10 +110,6 @@ func (base *baseClient) BuildAndSend(msg []sdk.Msg, baseTx sdk.BaseTx) (sdk.Resu
 	var res sdk.ResultTx
 	var address string
 
-	// lock the account
-	base.l.Lock(baseTx.From)
-	defer base.l.Unlock(baseTx.From)
-
 	retryableFunc := func() error {
 		txByte, ctx, e := base.buildTx(msg, baseTx)
 		if e != nil {
@@ -170,8 +166,6 @@ func (base *baseClient) SendBatch(msgs sdk.Msgs, baseTx sdk.BaseTx) (rs []sdk.Re
 	base.Logger().Debug("validate msg success")
 
 	// lock the account
-	base.l.Lock(baseTx.From)
-	defer base.l.Unlock(baseTx.From)
 
 	var address string
 	var batch = maxBatch
@@ -305,7 +299,7 @@ func (base *baseClient) prepare(baseTx sdk.BaseTx) (*clienttx.Factory, error) {
 	}
 	factory.WithAddress(addr.String())
 
-	account, err := base.QueryAndRefreshAccount(addr.String())
+	account, err := base.queryAndRefreshAccount(baseTx.From, addr)
 	if err != nil {
 		return nil, err
 	}
@@ -343,6 +337,17 @@ func (base *baseClient) prepare(baseTx sdk.BaseTx) (*clienttx.Factory, error) {
 		factory.WithMemo(baseTx.Memo)
 	}
 	return factory, nil
+}
+
+func (base *baseClient) queryAndRefreshAccount(from string, addr sdk.AccAddress) (sdk.BaseAccount, sdk.Error) {
+	// lock the account
+	base.l.Lock(from)
+	defer base.l.Unlock(from)
+	account, err := base.QueryAndRefreshAccount(addr.String())
+	if err != nil {
+		return sdk.BaseAccount{}, err
+	}
+	return account, nil
 }
 
 func (base *baseClient) ValidateTxSize(txSize int, msgs []sdk.Msg) (bool, sdk.Error) {
