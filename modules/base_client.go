@@ -339,6 +339,8 @@ func (base *baseClient) prepare(baseTx sdk.BaseTx) (*clienttx.Factory, error) {
 	return factory, nil
 }
 
+var seq uint64
+
 func (base *baseClient) queryAndRefreshAccount(from string, addr sdk.AccAddress) (sdk.BaseAccount, sdk.Error) {
 	// lock the account
 	base.l.Lock(from)
@@ -346,6 +348,13 @@ func (base *baseClient) queryAndRefreshAccount(from string, addr sdk.AccAddress)
 	account, err := base.QueryAndRefreshAccount(addr.String())
 	if err != nil {
 		return sdk.BaseAccount{}, err
+	}
+
+	if seq < account.Sequence {
+		seq = account.Sequence + 1
+	} else {
+		account.Sequence = seq
+		seq++
 	}
 	return account, nil
 }
