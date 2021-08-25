@@ -349,7 +349,7 @@ func (base *baseClient) queryAndRefreshAccount(from string, addr sdk.AccAddress)
 	if err != nil {
 		return sdk.BaseAccount{}, err
 	}
-
+	fmt.Println(account.Sequence, seq)
 	if seq < account.Sequence {
 		seq = account.Sequence + 1
 	} else {
