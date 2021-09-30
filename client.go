@@ -2,7 +2,6 @@ package sdk
 
 import (
 	"fmt"
-	"github.com/bianjieai/irita-sdk-go/modules/slashing"
 
 	"github.com/bianjieai/irita-sdk-go/modules/oracle"
 
@@ -13,6 +12,7 @@ import (
 	cryptocodec "github.com/bianjieai/irita-sdk-go/crypto/codec"
 	"github.com/bianjieai/irita-sdk-go/modules"
 	"github.com/bianjieai/irita-sdk-go/modules/admin"
+
 	"github.com/bianjieai/irita-sdk-go/modules/bank"
 	"github.com/bianjieai/irita-sdk-go/modules/identity"
 	"github.com/bianjieai/irita-sdk-go/modules/keys"
@@ -21,6 +21,7 @@ import (
 	"github.com/bianjieai/irita-sdk-go/modules/params"
 	"github.com/bianjieai/irita-sdk-go/modules/record"
 	"github.com/bianjieai/irita-sdk-go/modules/service"
+	"github.com/bianjieai/irita-sdk-go/modules/slashing"
 	"github.com/bianjieai/irita-sdk-go/modules/token"
 	"github.com/bianjieai/irita-sdk-go/modules/wasm"
 	"github.com/bianjieai/irita-sdk-go/types"
